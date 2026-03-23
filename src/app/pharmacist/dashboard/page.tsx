@@ -10,20 +10,21 @@ type ScriptStatus = "New" | "Processing" | "Ready for Collection";
 interface Script {
   id: string;
   patientName: string;
-  time: string;
+  idNumber?: string;
+  medicalAid?: string;
+  medication?: string;
   status: ScriptStatus;
-  medAid?: string;
+  timeUploaded: string;
 }
 
 const INITIAL_SCRIPTS: Script[] = [
-  { id: "SCR-1004", patientName: "Sarah Jenkins", time: "10 mins ago", status: "New", medAid: "Discovery Health" },
-  { id: "SCR-1005", patientName: "Michael Chang", time: "25 mins ago", status: "New" },
-  { id: "SCR-1002", patientName: "Rohan Naidoo", time: "1 hr ago", status: "Processing", medAid: "Bonitas" },
-  { id: "SCR-1003", patientName: "Emily Venter", time: "2 hrs ago", status: "Ready for Collection" },
+  { id: "RX-10492", patientName: "Sipho Ndlovu", idNumber: "8205145089081", medicalAid: "Discovery Health", medication: "Glucophage 500mg, Amloc 5mg", status: "New", timeUploaded: "10 mins ago" },
+  { id: "RX-10493", patientName: "Johan van der Merwe", idNumber: "7509215111084", medicalAid: "Bestmed", medication: "Eltroxin 100mcg", status: "Processing", timeUploaded: "45 mins ago" },
+  { id: "RX-10494", patientName: "Lerato Khumalo", idNumber: "9003120045082", medicalAid: "GEMS", medication: "Purata 10mg", status: "Ready for Collection", timeUploaded: "2 hours ago" },
 ];
 
 export default function KanbanBoard() {
-  const [scripts, setScripts] = useLocalStorage<Script[]>("alpha_pharm_scripts", INITIAL_SCRIPTS);
+  const [scripts, setScripts] = useLocalStorage<Script[]>("alpha_pharm_scripts_sa_mock", INITIAL_SCRIPTS);
   const [selectedScript, setSelectedScript] = useState<Script | null>(null);
   const [showIntegrations, setShowIntegrations] = useState(false);
 
@@ -90,13 +91,18 @@ export default function KanbanBoard() {
                     </div>
                     <h3 className="font-bold text-foreground mb-1">{script.patientName}</h3>
                     <div className="flex flex-col gap-1 mt-3">
-                      {script.medAid && (
+                      {script.medication && (
+                         <span className="text-xs font-semibold text-foreground mb-1 line-clamp-1">
+                           {script.medication}
+                         </span>
+                      )}
+                      {script.medicalAid && (
                          <span className="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded-md w-fit font-medium">
-                           {script.medAid}
+                           {script.medicalAid}
                          </span>
                       )}
                       <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                        <Clock className="w-3 h-3" /> Received {script.time}
+                        <Clock className="w-3 h-3" /> Received {script.timeUploaded}
                       </span>
                     </div>
                   </motion.div>
@@ -120,7 +126,8 @@ export default function KanbanBoard() {
               <div className="flex justify-between items-center p-6 border-b border-border">
                 <div>
                   <h2 className="text-xl font-bold text-foreground">{selectedScript.patientName}</h2>
-                  <p className="text-sm text-muted-foreground">{selectedScript.id} • {selectedScript.time}</p>
+                  <p className="text-sm text-muted-foreground">{selectedScript.id} • {selectedScript.timeUploaded}</p>
+                  {selectedScript.idNumber && <p className="text-sm font-medium text-foreground mt-1">ID: {selectedScript.idNumber}</p>}
                 </div>
                 <button 
                   onClick={() => { setSelectedScript(null); setShowIntegrations(false); }}
@@ -144,6 +151,12 @@ export default function KanbanBoard() {
                         {selectedScript.status}
                       </span>
                     </div>
+                    {selectedScript.medication && (
+                      <div>
+                        <span className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Prescribed</span>
+                        <span className="text-sm font-medium text-foreground">{selectedScript.medication}</span>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="pt-6 border-t border-border">
