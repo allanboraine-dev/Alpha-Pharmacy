@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Upload, Camera, CheckCircle2, ShieldCheck, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export default function PatientUploader() {
   const [success, setSuccess] = useState(false);
@@ -27,6 +28,7 @@ export default function PatientUploader() {
             <span className="text-sm font-medium text-muted-foreground hidden sm:flex items-center gap-1">
               <ShieldCheck className="w-4 h-4 text-[var(--color-alpha-green)]" /> Secure
             </span>
+            <InstallPrompt />
             <ThemeToggle />
           </div>
         </div>
