@@ -32,12 +32,10 @@ export default function KanbanBoard() {
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-      const hasNewScript = scripts.some(s => s.id === "RX-10495");
-      if (!hasNewScript) {
-        setScripts([{ id: "RX-10495", patientName: "David Naidoo", idNumber: "8502125022081", medicalAid: "Bonitas", medication: "Panado 500mg, Voltaren Gel", status: "New", timeUploaded: "Just now" }, ...scripts]);
-      }
+      // Completely reset the board back to the original Demo state
+      setScripts(INITIAL_SCRIPTS);
       setIsRefreshing(false);
-    }, 1200);
+    }, 800);
   };
 
   const handleStatusChange = (newStatus: ScriptStatus | "Completed") => {
