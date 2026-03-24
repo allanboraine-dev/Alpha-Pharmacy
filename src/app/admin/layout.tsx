@@ -2,6 +2,8 @@
 
 import { BarChart3, Building2, Link as LinkIcon, ShieldAlert, LogOut, Search } from "lucide-react";
 import NextLink from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const handlePlaceholderClick = (moduleName: string) => {
@@ -50,11 +52,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
              <input type="text" placeholder="Search branches, scripts, audits..." className="bg-transparent border-none focus:outline-none focus:ring-0 ml-2 w-full text-sm text-foreground placeholder-muted-foreground" />
           </div>
           <div className="flex gap-4 items-center">
-             <div className="text-right">
+             <InstallPrompt />
+             <ThemeToggle />
+             <div className="text-right hidden sm:block">
                 <span className="block text-sm font-bold text-foreground">Head Office Portal</span>
                 <span className="block text-xs text-muted-foreground">Johannesburg, ZA</span>
              </div>
-             <div className="w-10 h-10 bg-muted border border-border rounded-full"></div>
+             <div className="w-10 h-10 bg-muted border border-border rounded-full hidden sm:block"></div>
           </div>
         </header>
 

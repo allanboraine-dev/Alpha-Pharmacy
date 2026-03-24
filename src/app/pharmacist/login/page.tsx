@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Lock, User, Eye, EyeOff, LogIn } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export default function PharmacistLogin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,8 +16,12 @@ export default function PharmacistLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center p-4 relative">
+      <div className="absolute top-6 right-6 flex items-center gap-4">
+         <InstallPrompt />
+         <ThemeToggle />
+      </div>
+      <div className="max-w-md w-full bg-white dark:bg-card rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-border">
         <div className="bg-[var(--color-alpha-green)] p-8 text-center relative overflow-hidden">
            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl"></div>
            <div className="w-16 h-16 bg-white rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg">
