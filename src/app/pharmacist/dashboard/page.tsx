@@ -48,7 +48,7 @@ export default function KanbanBoard() {
           formattedPhone = "27" + formattedPhone.substring(1);
         }
         
-        const message = encodeURIComponent(`Hello ${selectedScript.patientName},\n\nYour prescription (${selectedScript.id}) has been successfully processed, signed off, and archived.\n\nThank you for using Alpha Pharm.`);
+        const message = encodeURIComponent(`Hello ${selectedScript.patientName},\n\nYour prescription (${selectedScript.id}) is ready for collection! It has been successfully processed and signed off.\n\nThank you for using Alpha Pharm.`);
         window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
       }
 
