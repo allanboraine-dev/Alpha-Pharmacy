@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Clock, CheckCircle2, MoreVertical, X, UploadCloud, Activity, RefreshCw } from "lucide-react";
+import { FileText, Clock, CheckCircle2, MoreVertical, X, UploadCloud, Activity, RefreshCw, Printer, Download } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -163,9 +163,81 @@ export default function KanbanBoard() {
               </div>
               
               <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8">
-                <div className="w-full md:w-1/2 min-h-[300px] bg-muted rounded-2xl flex flex-col items-center justify-center border border-border text-muted-foreground relative overflow-hidden">
-                  <FileText className="w-16 h-16 mb-2 opacity-50" />
-                  <span>Script Preview</span>
+                <div className="w-full md:w-1/2 min-h-[400px] bg-slate-50 rounded-2xl flex flex-col border border-border text-gray-800 relative overflow-hidden group shadow-inner p-6 md:p-8 font-sans">
+                  {/* Dummy Script Header */}
+                  <div className="border-b border-gray-300 pb-3 mb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-bold text-lg text-gray-900 leading-tight">Dr. Sarah Jenkins</h3>
+                        <p className="text-xs text-gray-500">MBChB (UP), FC Fam Med (SA)</p>
+                        <p className="text-xs text-gray-500">Pr No. 1234567 | HPCSA 987654</p>
+                      </div>
+                      <div className="text-right text-xs text-gray-500 leading-tight">
+                        <p>123 Medical Centre</p>
+                        <p>Sandton, 2196</p>
+                        <p>011 555 1234</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Dummy Script Patient Info */}
+                  <div className="mb-4 bg-white p-3 rounded-lg border border-gray-200">
+                    <div className="flex justify-between text-sm mb-1">
+                      <p><span className="font-semibold text-gray-600">Patient:</span> {selectedScript.patientName}</p>
+                      <p><span className="font-semibold text-gray-600">Date:</span> {new Date().toLocaleDateString()}</p>
+                    </div>
+                    {selectedScript.idNumber && <p className="text-sm"><span className="font-semibold text-gray-600">ID:</span> {selectedScript.idNumber}</p>}
+                  </div>
+
+                  {/* Dummy Script Body */}
+                  <div className="flex-1 bg-white p-4 rounded-lg border border-gray-200 shadow-sm relative">
+                    <div className="absolute top-2 left-2 text-6xl text-blue-900/10 font-serif select-none pointer-events-none">Rx</div>
+                    
+                    {selectedScript.medication ? (
+                      <div className="space-y-4 relative z-10 pt-6">
+                        {selectedScript.medication.split(',').map((med, i) => (
+                           <div key={i} className="pl-4 border-l-2 border-blue-900/30">
+                             <p className="font-bold text-base font-mono text-gray-800">{med.trim()}</p>
+                             <p className="text-xs italic text-gray-600">Sig: As directed. Mitte: 30 days.</p>
+                           </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4 relative z-10 pt-6">
+                         <div className="pl-4 border-l-2 border-blue-900/30">
+                           <p className="font-bold text-base font-mono text-gray-800">Amoxicillin 500mg Caps</p>
+                           <p className="text-xs italic text-gray-600">Sig: 1 po tds for 5 days. Mitte: 15.</p>
+                         </div>
+                         <div className="pl-4 border-l-2 border-blue-900/30">
+                           <p className="font-bold text-base font-mono text-gray-800">Ibuprofen 400mg Tabs</p>
+                           <p className="text-xs italic text-gray-600">Sig: 1 po bd prn pain. Mitte: 20.</p>
+                         </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Dummy Script Footer */}
+                  <div className="mt-6 flex justify-between items-end">
+                     <div>
+                       <p className="text-xs font-semibold text-gray-500">Repetatur: 0</p>
+                     </div>
+                     <div className="text-center">
+                       <div className="w-32 border-b-2 border-blue-900/40 mb-1 pb-1 text-blue-900 font-bold italic text-lg" style={{ fontFamily: 'var(--font-geist-mono), monospace' }}>
+                         S. Jenkins
+                       </div>
+                       <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Authorized Signature</p>
+                     </div>
+                  </div>
+                  
+                  {/* Action Buttons Overlay */}
+                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                    <button onClick={() => alert("Printing script...")} className="p-2.5 bg-background shadow-lg border border-border rounded-xl text-foreground hover:bg-[var(--color-alpha-green)] hover:text-white hover:border-transparent transition-all flex items-center justify-center" title="Print Script">
+                      <Printer className="w-5 h-5" />
+                    </button>
+                    <button onClick={() => alert("Downloading secure PDF...")} className="p-2.5 bg-background shadow-lg border border-border rounded-xl text-foreground hover:bg-[var(--color-alpha-green)] hover:text-white hover:border-transparent transition-all flex items-center justify-center" title="Download Document">
+                      <Download className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="w-full md:w-1/2 flex flex-col justify-between space-y-4">
