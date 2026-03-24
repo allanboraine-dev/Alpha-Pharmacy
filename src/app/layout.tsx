@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Alpha Pharm Script Uploader",
   description: "Secure and convenient script uploading for Alpha Pharm patients.",
-  manifest: "/manifest.json",
+  manifest: "/manifest-patient.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

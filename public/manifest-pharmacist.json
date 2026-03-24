@@ -1,0 +1,14 @@
+{
+  "name": "Alpha Pharm Staff",
+  "short_name": "AP Staff",
+  "description": "Pharmacist Dispensing Portal",
+  "start_url": "/pharmacist/login",
+  "id": "alphapharm-staff",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1E5631",
+  "icons": [
+    { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
