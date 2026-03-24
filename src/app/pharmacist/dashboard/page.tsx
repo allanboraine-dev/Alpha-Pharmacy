@@ -49,7 +49,7 @@ export default function KanbanBoard() {
         }
         
         const message = encodeURIComponent(`Hello ${selectedScript.patientName},\n\nYour prescription (${selectedScript.id}) is ready for collection! It has been successfully processed and signed off.\n\nThank you for using Alpha Pharm.`);
-        window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?phone=${formattedPhone}&text=${message}`, '_blank');
       }
 
       setScripts(scripts.filter(s => s.id !== selectedScript?.id));
