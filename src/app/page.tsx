@@ -12,6 +12,36 @@ export default function PatientUploader() {
   
   const handleUpload = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    try {
+      // Create new script from form
+      const newScript = {
+        id: `RX-${Math.floor(10000 + Math.random() * 90000)}`,
+        patientName: formData.get("fullName") as string || "New Patient",
+        idNumber: formData.get("idNumber") as string || "",
+        medicalAid: formData.get("medicalAid") as string || "",
+        status: "New",
+        timeUploaded: "Just now"
+      };
+
+      // Ensure data structure from Pharmacist portal is preserved
+      const existingKey = window.localStorage.getItem("alpha_pharm_scripts_sa_mock");
+      const scripts = existingKey ? JSON.parse(existingKey) : [
+        // Ensure defaults are loaded if pharmacist dashboard hasn't been opened yet
+        { id: "RX-10492", patientName: "Sipho Ndlovu", status: "New", timeUploaded: "10 mins ago" },
+        { id: "RX-10493", patientName: "Johan van der Merwe", status: "Processing", timeUploaded: "45 mins ago" },
+        { id: "RX-10494", patientName: "Lerato Khumalo", status: "Ready for Collection", timeUploaded: "2 hours ago" },
+      ];
+      
+      const updatedList = [newScript, ...scripts];
+      window.localStorage.setItem("alpha_pharm_scripts_sa_mock", JSON.stringify(updatedList));
+      window.dispatchEvent(new StorageEvent("storage", { key: "alpha_pharm_scripts_sa_mock", newValue: JSON.stringify(updatedList) }));
+    } catch (error) {
+      console.error(error);
+    }
+
     setSuccess(true);
   };
   
@@ -102,19 +132,19 @@ export default function PatientUploader() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">Full Name <span className="text-red-500">*</span></label>
-                  <input required type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="John Doe" />
+                  <input required name="fullName" type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="John Doe" />
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">ID Number <span className="text-red-500">*</span></label>
-                  <input required type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="Enter ID number" />
+                  <input required name="idNumber" type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="Enter ID number" />
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">Phone Number <span className="text-red-500">*</span></label>
-                  <input required type="tel" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="082 123 4567" />
+                  <input required name="phoneNumber" type="tel" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="082 123 4567" />
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">Medical Aid Details (Optional)</label>
-                  <input type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="Scheme Name & Number" />
+                  <input name="medicalAid" type="text" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] focus:border-transparent transition-all" placeholder="Scheme Name & Number" />
                 </div>
               </div>
 

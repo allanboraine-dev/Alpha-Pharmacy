@@ -34,7 +34,7 @@ export default function AdminDashboard() {
     
     // Add new branch to state (persisted via LocalStorage)
     setBranches(prev => [
-      { id: Date.now().toString(), name: newBranch.name, status: 'Provisioning', color: 'bg-amber-100 text-amber-700', scripts: '0' },
+      { id: Date.now().toString(), name: newBranch.name, status: 'Active', color: 'bg-green-100 text-green-700', scripts: '0' },
       ...prev
     ]);
     
