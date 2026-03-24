@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Clock, CheckCircle2, MoreVertical, X, UploadCloud, Activity } from "lucide-react";
+import { FileText, Clock, CheckCircle2, MoreVertical, X, UploadCloud, Activity, RefreshCw } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -27,6 +27,28 @@ export default function KanbanBoard() {
   const [scripts, setScripts] = useLocalStorage<Script[]>("alpha_pharm_scripts_sa_mock", INITIAL_SCRIPTS);
   const [selectedScript, setSelectedScript] = useState<Script | null>(null);
   const [showIntegrations, setShowIntegrations] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      const hasNewScript = scripts.some(s => s.id === "RX-10495");
+      if (!hasNewScript) {
+        setScripts([{ id: "RX-10495", patientName: "David Naidoo", idNumber: "8502125022081", medicalAid: "Bonitas", medication: "Panado 500mg, Voltaren Gel", status: "New", timeUploaded: "Just now" }, ...scripts]);
+      }
+      setIsRefreshing(false);
+    }, 1200);
+  };
+
+  const handleStatusChange = (newStatus: ScriptStatus | "Completed") => {
+    if (newStatus === "Completed") {
+      setScripts(scripts.filter(s => s.id !== selectedScript?.id));
+    } else {
+      setScripts(scripts.map(s => s.id === selectedScript?.id ? { ...s, status: newStatus as ScriptStatus } : s));
+    }
+    setShowIntegrations(false);
+    setSelectedScript(null);
+  };
 
   const columns: { title: ScriptStatus; icon: any; color: string; bgColor: string }[] = [
     { title: "New", icon: FileText, color: "text-blue-600", bgColor: "bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400" },
@@ -53,7 +75,12 @@ export default function KanbanBoard() {
         </div>
         <div className="flex gap-2">
           <input type="text" placeholder="Search Patient..." className="border border-input bg-background rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-alpha-green)] text-sm" />
-          <button className="bg-[var(--color-alpha-green)] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[var(--color-alpha-green-light)] transition-colors">
+          <button 
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 bg-[var(--color-alpha-green)] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[var(--color-alpha-green-light)] transition-colors disabled:opacity-70"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
             Refresh
           </button>
         </div>
@@ -160,7 +187,7 @@ export default function KanbanBoard() {
                   </div>
                   
                   <div className="pt-6 border-t border-border">
-                    {!showIntegrations ? (
+                    {selectedScript.status === "New" && !showIntegrations && (
                       <button 
                         onClick={() => setShowIntegrations(true)}
                         className="w-full bg-[var(--color-alpha-green)] hover:bg-[var(--color-alpha-green-light)] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95"
@@ -168,7 +195,8 @@ export default function KanbanBoard() {
                         <UploadCloud className="w-5 h-5" />
                         Push to Dispensing Software
                       </button>
-                    ) : (
+                    )}
+                    {selectedScript.status === "New" && showIntegrations && (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                          <p className="text-sm font-bold text-foreground mb-2">Select Integration:</p>
                          <button onClick={() => handleExport('Allegra Health Network')} className="w-full bg-background border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
@@ -179,6 +207,22 @@ export default function KanbanBoard() {
                          </button>
                          <button onClick={() => setShowIntegrations(false)} className="w-full mt-2 text-sm text-muted-foreground hover:text-foreground font-medium">Cancel</button>
                       </motion.div>
+                    )}
+                    {selectedScript.status === "Processing" && (
+                      <button 
+                        onClick={() => handleStatusChange("Ready for Collection")}
+                        className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95"
+                      >
+                        <CheckCircle2 className="w-5 h-5" /> Mark Ready for Collection
+                      </button>
+                    )}
+                    {selectedScript.status === "Ready for Collection" && (
+                      <button 
+                        onClick={() => handleStatusChange("Completed")}
+                        className="w-full bg-[var(--color-alpha-green)] hover:bg-[var(--color-alpha-green-light)] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95"
+                      >
+                        <CheckCircle2 className="w-5 h-5" /> Sign Off & Archive
+                      </button>
                     )}
                   </div>
                 </div>
