@@ -11,6 +11,7 @@ interface Script {
   id: string;
   patientName: string;
   idNumber?: string;
+  phoneNumber?: string;
   medicalAid?: string;
   medication?: string;
   status: ScriptStatus;
@@ -18,9 +19,9 @@ interface Script {
 }
 
 const INITIAL_SCRIPTS: Script[] = [
-  { id: "RX-10492", patientName: "Sipho Ndlovu", idNumber: "8205145089081", medicalAid: "Discovery Health", medication: "Glucophage 500mg, Amloc 5mg", status: "New", timeUploaded: "10 mins ago" },
-  { id: "RX-10493", patientName: "Johan van der Merwe", idNumber: "7509215111084", medicalAid: "Bestmed", medication: "Eltroxin 100mcg", status: "Processing", timeUploaded: "45 mins ago" },
-  { id: "RX-10494", patientName: "Lerato Khumalo", idNumber: "9003120045082", medicalAid: "GEMS", medication: "Purata 10mg", status: "Ready for Collection", timeUploaded: "2 hours ago" },
+  { id: "RX-10492", patientName: "Sipho Ndlovu", idNumber: "8205145089081", phoneNumber: "0821234567", medicalAid: "Discovery Health", medication: "Glucophage 500mg, Amloc 5mg", status: "New", timeUploaded: "10 mins ago" },
+  { id: "RX-10493", patientName: "Johan van der Merwe", idNumber: "7509215111084", phoneNumber: "0832345678", medicalAid: "Bestmed", medication: "Eltroxin 100mcg", status: "Processing", timeUploaded: "45 mins ago" },
+  { id: "RX-10494", patientName: "Lerato Khumalo", idNumber: "9003120045082", phoneNumber: "0713456789", medicalAid: "GEMS", medication: "Purata 10mg", status: "Ready for Collection", timeUploaded: "2 hours ago" },
 ];
 
 export default function KanbanBoard() {
@@ -40,6 +41,17 @@ export default function KanbanBoard() {
 
   const handleStatusChange = (newStatus: ScriptStatus | "Completed") => {
     if (newStatus === "Completed") {
+      if (selectedScript?.phoneNumber) {
+        // Format to international generic standard (South Africa assumption based on MVP)
+        let formattedPhone = selectedScript.phoneNumber.replace(/\D/g, "");
+        if (formattedPhone.startsWith("0")) {
+          formattedPhone = "27" + formattedPhone.substring(1);
+        }
+        
+        const message = encodeURIComponent(`Hello ${selectedScript.patientName},\n\nYour prescription (${selectedScript.id}) has been successfully processed, signed off, and archived.\n\nThank you for using Alpha Pharm.`);
+        window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
+      }
+
       setScripts(scripts.filter(s => s.id !== selectedScript?.id));
     } else {
       setScripts(scripts.map(s => s.id === selectedScript?.id ? { ...s, status: newStatus as ScriptStatus } : s));

@@ -21,6 +21,7 @@ export default function PatientUploader() {
         id: `RX-${Math.floor(10000 + Math.random() * 90000)}`,
         patientName: formData.get("fullName") as string || "New Patient",
         idNumber: formData.get("idNumber") as string || "",
+        phoneNumber: formData.get("phoneNumber") as string || "",
         medicalAid: formData.get("medicalAid") as string || "",
         status: "New",
         timeUploaded: "Just now"
